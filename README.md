@@ -1,4 +1,4 @@
-# Retail SQL Analysis — B2B Paper Sales
+# Retail SQL Analysis - B2B Paper Sales
 
 #### Project Artifacts (Start Here)
 - SQL Answers (Q1–Q15): [docs/sql_answers.md](docs/sql_answers.md)
