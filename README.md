@@ -71,7 +71,7 @@ Full technical details and reproducible outputs are available in [SQL Answers](d
 ---
 
 #### 5) Recommendations (Next Steps)
--#### 5) Recommendations (Next Steps)
+
 - **Focus on the main revenue product (Standard).**  
   **Why:** Standard brings in the most revenue (**$9.67M**), higher than Gloss and Poster.  
   **Next step:** Make Standard the default baseline for forecasting and basic planning discussions, then review if Gloss/Poster growth opportunities exist by customer segment.  
