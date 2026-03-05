@@ -1,5 +1,11 @@
 # retail-sql-analysis
 
+#### Project Artifacts (Start Here)
+- SQL Answers (Q1–Q15): [docs/sql_answers.md](docs/sql_answers.md)
+- ERD (PDF): [docs/erd.pdf](docs/erd.pdf)
+- Data Dictionary (PDF): [docs/data_dictionary.pdf](docs/data_dictionary.pdf)
+- SQL Script: [sql/retail_analysis.sql](sql/retail_analysis.sql)
+
 #### Project Background
 This project analyzes **B2B  retail paper sales** using a relational dataset that connects **accounts, orders, sales reps, regions, and web events**. The organization has accumulated several years of transaction and digital activity data, and this analysis converts that raw data into actionable insights for cross-functional partners including **Sales Leadership**, **Sales Operations (RevOps)**, **Marketing Analytics**, and **Finance (FP&A)**.
 
