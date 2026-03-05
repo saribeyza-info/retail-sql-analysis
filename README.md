@@ -48,74 +48,57 @@ Full technical details and reproducible outputs are available in [SQL Answers](d
 ---
 
 #### 4) Insights Deep Dive
-<details>
-  <summary><b>Insights Deep Dive (click to expand)</b></summary>
 
-  <!-- **Business metric(s):** Product revenue (USD) and units sold by paper type  
-- **Qualified value:**  
-  - **Revenue:** Standard **$9,672,346.54** | Gloss **$7,593,159.77** | Poster **$5,876,005.52**  
-  - **Units:** Standard **1,938,346** | Gloss **1,013,773** | Poster **723,646**
-- **Simple trend story (2013–2017):** Standard remains the leading contributor across both units and revenue over the observed period, indicating stable demand and making it the best candidate for forecasting and product-led planning.
-- **Who uses this:** **Finance** (planning/forecasting), **Sales Ops** (product strategy & bundles), **Operations/Supply** (capacity and inventory planning). -->
-  
-</details>
+##### Insight 1 — Product mix: Standard is the primary revenue driver
+- **Business Metrics:** Product revenue by paper type (USD)
+- **Evidence (2013–2017):** Standard generated **$9.67M** in revenue, higher than Gloss (**$7.59M**) and Poster (**$5.88M**).
+- **So What:** Standard demand is the main input for revenue planning. Forecasting and basic product strategy should start with Standard, then use targeted cross-sell to grow Gloss and Poster where it fits.
+- **Who uses this:** Sales Leadership, Sales Operations, Finance, Operations/Supply.
 
-##### Insight 1 — Standard is the core revenue engine (revenue + volume leader)
-- **Business metric(s):** Product revenue (USD) and units sold by paper type  
-- **Qualified value:**  
-  - **Revenue:** Standard **$9,672,346.54** | Gloss **$7,593,159.77** | Poster **$5,876,005.52**  
-  - **Units:** Standard **1,938,346** | Gloss **1,013,773** | Poster **723,646**
-- **Simple trend story (2013–2017):** Standard remains the leading contributor across both units and revenue over the observed period, indicating stable demand and making it the best candidate for forecasting and product-led planning.
-- **Who uses this:** **Finance** (planning/forecasting), **Sales Ops** (product strategy & bundles), **Operations/Supply** (capacity and inventory planning).
+##### Insight 2 — Region: Northeast leads total revenue; West/Midwest lead AOV (Average Order Value)
+- **Business Metrics:** Total revenue by region; **AOV (Average Order Value)** proxy = `AVG(total_amt_usd)`
+- **Evidence:** Northeast leads total sales at **$7.74M**. West (**$3,626**) and Midwest (**$3,360**) are above the company AOV (**$3,348**).
+- **So What:** One regional plan will not fit all. Northeast performance looks more volume-driven, while West and Midwest skew toward larger orders. This supports region-specific targets and coaching focus.
+- **Who uses this:** Regional Sales Leaders, Sales Operations, Finance.
 
-##### Insight 2 — Northeast leads total revenue; West/Midwest lead on average order value (AOV)
-- **Business metric(s):** Total revenue by region; **AOV proxy** = average order value (USD)  
-- **Qualified value:**  
-  - **Top region by total sales:** Northeast = **$7,744,405.36**  
-  - **Company AOV:** **$3,348.02**  
-  - **Above-average AOV regions:** West = **$3,626.15**, Midwest = **$3,359.52**
-- **Simple trend story:** Regional performance splits into **volume vs. basket size**—Northeast appears to win through higher frequency/volume, while West/Midwest skew higher on order value, implying different target-setting and pipeline strategies.
-- **Who uses this:** **Regional Sales leadership**, **Sales Ops** (coverage model & targets), **Finance** (pacing and goal-setting).
+##### Insight 3 — Top accounts: Highest AOV customers (benchmark for account planning)
+- **Business Metrics:** Account-level **AOV (Average Order Value)**  calculated as the average of total_amt_usd
+- **Evidence (Top 5 by AOV):** Pacific Life (**$19,639.94**), Fidelity National Financial (**$13,753.41**), Kohl's (**$12,872.17**), State Farm Insurance Cos. (**$12,423.39**), AmerisourceBergen (**$9,685.45**).
+- **So What:** This list helps Sales and Sales Operations prioritize account plans. It separates consistently large-basket customers from accounts that may buy more often but in smaller orders.
+- **Who uses this:** Account Managers/Sales, Sales Operations, Finance.
 
-##### Insight 3 — High-value accounts stand out by average order value (AOV benchmark)
-- **Business metric(s):** Average order value (AOV proxy) by account = `AVG(total_amt_usd)`  
-- **Qualified value (Top 5 by AOV):**
-  - **Pacific Life:** **$19,639.94**
-  - **Fidelity National Financial:** **$13,753.41**
-  - **Kohl's:** **$12,872.17**
-  - **State Farm Insurance Cos.:** **$12,423.39**
-  - **AmerisourceBergen:** **$9,685.45**
-- **Simple trend story:** AOV highlights accounts with consistently larger baskets, helping differentiate **high-volume** customers from **high-value-per-order** customers for account planning.
-- **Who uses this:** **Account Managers / Sales**, **Sales Ops** (segmentation), **Finance** (revenue concentration and risk review).
-
-##### Insight 4 — Direct dominates web activity; attribution requires a defined model
-- **Business metric(s):** Web events by channel (engagement proxy) + account-level association to sales volume  
-- **Qualified value:**  
-  - **Top channel by activity:** Direct = **5,298 events**
-  - **Account-level joins:** Direct-linked accounts show the highest total quantity sold (directional signal).
-- **Simple trend story:** Direct traffic may reflect repeat customers rather than acquisition; without session/order-level linkage, channel conclusions should be treated as directional rather than causal.
-- **Who uses this:** **Marketing Analytics** (channel measurement), **Sales Ops** (lead-source alignment), **Finance** (ROI governance).
-
-##### Insight 5 — Time-series views support pacing and seasonality checks
-- **Business metric(s):** Monthly revenue + running total; daily order count + **7-day moving average**  
-- **Qualified value (examples from outputs):**
-  - Monthly revenue varies meaningfully month-to-month (e.g., **Oct 2014 = $495,333.59** in the sample output).
-  - Early daily demand smooths to roughly **~3–5 orders/day** via 7-day moving average.
-- **Simple trend story:** Running totals support executive pacing, while moving averages reduce noise and help detect demand shifts earlier than raw daily counts.
-- **Who uses this:** **Business Operations**, **Sales Leadership**, **Finance** (forecasting and pacing).
 
 ---
 
 #### 5) Recommendations (Next Steps)
-- **Product strategy:** Protect **Standard** as the primary revenue driver; partner with **Sales Ops + Finance** to test bundle offers and pricing thresholds for cross-sell into Gloss/Poster where appropriate.
-- **Regional execution:** Align playbooks to regional dynamics—**Northeast** focus on retention/reorder cadence; **West/Midwest** prioritize upsell/expansion motions to capitalize on higher AOV.
-- **Marketing measurement:** Implement an attribution approach (e.g., defined time window + touch rules) before reallocating spend based on channel-level signals.
-- **Operational reporting:** Publish a recurring KPI pack (monthly revenue pacing + weekly demand trend) for Sales and Finance stakeholders.
+-#### 5) Recommendations (Next Steps)
+- **Focus on the main revenue product (Standard).**  
+  **Why:** Standard brings in the most revenue (**$9.67M**), higher than Gloss and Poster.  
+  **Next step:** Make Standard the default baseline for forecasting and basic planning discussions, then review if Gloss/Poster growth opportunities exist by customer segment.  
+  **Expected impact:** More realistic plans and fewer surprises in demand and supply planning.
+
+- **Use different regional approaches (volume vs. order size).**  
+  **Why:** The **Northeast** leads total revenue (**$7.74M**), while **West/Midwest** have higher **Average Order Value (AOV)** than the company average.  
+  **Next step:** For Northeast, prioritize retention and repeat ordering (keep high-volume customers engaged). For West/Midwest, focus on increasing deal size and expanding existing accounts.  
+  **Expected impact:** Targets and sales activities match the way each region performs.
+
+- **Treat web channel findings as a signal, not a final answer.**  
+  **Why:** “Direct” has the most web events (**5,298**), but web events are connected to orders only at the account level, not at the order/session level.  
+  **Next step:** Before making marketing budget decisions, agree on a simple rule for linking web activity to sales (for example, time-window matching), or collect data that ties events to orders.  
+  **Expected impact:** Better confidence in marketing reporting and fewer misleading conclusions.
+
+- **Create a simple recurring performance update (one page).**  
+  **Why:** Monthly totals and trend views help track pacing and highlight spikes early.  
+  **Next step:** Share a monthly revenue snapshot and a weekly order-trend view with Sales and Finance in a consistent format.  
+  **Expected impact:** Faster alignment in meetings and quicker responses to changes in demand.
 
 ---
 
 #### Caveats & Assumptions
-- **Attribution caution:** Web events connect to orders through `account_id`. Without session/order-level keys, channel-to-sales joins can inflate results for high-activity accounts.
-- **Profitability definition:** “Most profitable” is interpreted as highest **revenue**, not margin (COGS/discount data not available).
-- **Time gaps:** Days with zero orders may not appear as rows; moving averages improve with a complete calendar date spine.
-- **Data quality:** Outlier/null validation is not production-hardened; additional QA checks are recommended before operational use.
+- **Web channel attribution is limited.**  
+  **Why:** Web events are linked to sales only through `account_id`. The data does not connect a specific web visit to a specific order.  
+  **What it affects:** Channel comparisons (for example, “Direct drives more sales”) can be overstated for accounts that are simply very active online.
+
+- **“Most profitable” is treated as highest revenue, not true profit.**  
+  **Why:** The dataset includes revenue fields, but it does not include costs, discounts, or COGS.  
+  **What it affects:** Any “profitability” conclusion should be read as “highest revenue,” and Finance would need cost data to confirm margin.
