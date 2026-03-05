@@ -1,4 +1,4 @@
-# retail-sql-analysis
+# Retail SQL Analysis — B2B Paper Sales (Portfolio)
 
 #### Project Artifacts (Start Here)
 - SQL Answers (Q1–Q15): [docs/sql_answers.md](docs/sql_answers.md)
@@ -6,105 +6,101 @@
 - Data Dictionary (PDF): [docs/data_dictionary.pdf](docs/data_dictionary.pdf)
 - SQL Script: [sql/retail_analysis.sql](sql/retail_analysis.sql)
 
-#### Project Background
-This project analyzes **B2B  retail paper sales** using a relational dataset that connects **accounts, orders, sales reps, regions, and web events**. The organization has accumulated several years of transaction and digital activity data, and this analysis converts that raw data into actionable insights for cross-functional partners including **Sales Leadership**, **Sales Operations (RevOps)**, **Marketing Analytics**, and **Finance (FP&A)**.
+---
 
-The work focuses on understanding:
-- **Revenue and product mix** by paper type (Standard, Gloss, Poster)
-- **Top account performance** using average order value as a benchmark metric
-- **Digital channel activity** (web events) and its relationship to sales activity
-- **Time-series trends** using running totals and moving averages to support pacing and seasonality checks
+#### 1) Background & Overview (Data Analyst POV)
+This analysis translates raw retail transactions and digital activity into decision-ready metrics used by **Sales Leadership**, **Sales Operations**, **Marketing Analytics**, and **Finance**. The work answers practical Business Analyst questions: **where revenue is coming from**, **which customers are highest value**, **which regions outperform**, and **how demand behaves over time**.
 
-- **Artifacts**
-- **ERD:** [docs/erd.pdf](docs/erd.pdf)
-- **Data Dictionary:** [docs/data_dictionary.pdf](docs/data_dictionary.pdf)
-- **SQL Answers (Q1–Q15):** [docs/sql_answers.md](docs/sql_answers.md)
-- **SQL Script:** [sql/retail_analysis.sql](sql/retail_analysis.sql)
+The solution demonstrates core analytics SQL techniques—**JOINs**, **aggregations**, **CTEs/subqueries**, and **window functions**—to produce repeatable KPI outputs that support planning and performance reviews.
 
 ---
 
-#### Data Structure & Initial Checks
-The database consists of five tables: **accounts, orders, region, sales_reps, web_events**
-**Table sizes (row counts)**
-| Table | Rows |
-|---|---:|
-| accounts | **351** |
-| orders | **6,912** |
-| region | **4** |
-| sales_reps | **50** |
-| web_events | **9,073** |
+#### 2) Data Structure Overview (Business View)
+**Database entities (scope)**
+| Table | Rows | What it represents |
+|---|---:|---|
+| accounts | 351 | Customer accounts, assigned to a sales rep |
+| orders | 6,912 | Transactions (units + USD amounts by product type) |
+| sales_reps | 50 | Sales reps, assigned to a region |
+| region | 4 | Region lookup (e.g., Northeast, West) |
+| web_events | 9,073 | Account-level web interactions by channel |
 
-**Order date coverage**
+**Date coverage (orders)**
 - **First order:** 2013-12-04  
-- **Last order:** 2017-01-02
+- **Last order:** 2017-01-02  
 
-**How tables connect (business view)**
+**How the tables connect (high level)**
 - **Region → Sales Reps → Accounts → Orders**
 - **Accounts → Web Events**
 
-(See ERD and Data Dictionary linked above.)
+(See: [ERD](docs/erd.pdf) and [Data Dictionary](docs/data_dictionary.pdf).)
 
 ---
 
-#### Background & Overview (Data Analyst POV)
-This analysis uses SQL to answer operational and strategic questions commonly owned by a Business Analyst team: “Where is revenue coming from?”, “Which accounts are highest value?”, “Which regions are outperforming?”, and “What does demand look like over time?”.
+#### 3) Executive Summary
+Across **6,912 orders (2013–2017)**, **Standard** paper is the largest revenue driver at **$9.67M**, ahead of **Gloss ($7.59M)** and **Poster ($5.88M)**—making product mix the primary lever for revenue planning. The **Northeast** generates the highest total sales (**$7.74M**), while **West** and **Midwest** post **above-average order values** (**$3,626** and **$3,360** vs. company average **$3,348**), suggesting different regional growth playbooks. **Direct** is the largest web channel by activity (**5,298 events**) and shows the strongest association with sales volume in account-level joins; however, attribution is not order-level and should not be used alone for budget decisions.
 
-We use SQL capabilities expected in entry-level analytics roles—**JOINs, aggregations, CTEs, subqueries, and window functions**—to produce metrics that can be consumed by stakeholders in Sales, Marketing, and Finance.
-
----
-
-#### Executive Summary
-Across **6,912 orders (2013–2017)**, **Standard paper** is the top revenue driver at **$9.67M**, ahead of **Gloss ($7.59M)** and **Poster ($5.88M)**, making product mix the largest lever for revenue planning. The **Northeast** generates the highest total sales at **$7.74M**, while **West** and **Midwest** are **above the company average order value** (**$3,626** and **$3,360** vs **$3,348**), implying different regional growth levers. **Direct** is the most common web channel by activity (**5,298 events**) and shows the strongest association with sales volume in account-level joins, but marketing attribution requires additional rules before budget decisions.
-
-Detailed queries and outputs are available in **[SQL Answers](docs/sql_answers.md)** and **[SQL Script](sql/retail_analysis.sql)**.
+Full technical details and reproducible outputs are available in [SQL Answers](docs/sql_answers.md) and the [SQL Script](sql/retail_analysis.sql).
 
 ---
 
-#### Insights Deep Dive
-
-##### Insight 1 — Standard leads product revenue and volume (core revenue driver)
-- **Business metric(s):** product revenue (`standard_amt_usd`, `gloss_amt_usd`, `poster_amt_usd`), product units (`standard_qty`, `gloss_qty`, `poster_qty`)
-- **Quantified value:**
-  - **Revenue:** Standard **$9,672,346.54** | Gloss **$7,593,159.77** | Poster **$5,876,005.52**
+#### 4) Insights Deep Dive
+##### Insight 1 — Standard is the core revenue engine (revenue + volume leader)
+- **Business metric(s):** Product revenue (USD) and units sold by paper type  
+- **Qualified value:**  
+  - **Revenue:** Standard **$9,672,346.54** | Gloss **$7,593,159.77** | Poster **$5,876,005.52**  
   - **Units:** Standard **1,938,346** | Gloss **1,013,773** | Poster **723,646**
-- **Historical trend story:** Over the full period (**2013–2017**), Standard remains the leading contributor across both units and revenue, indicating stable demand and making it the best candidate for forecasting and product-led planning.
-- **Who uses this:** **Finance (FP&A)** for planning, **Sales Ops** for product strategy and bundles, **Operations** for supply planning.
+- **Simple trend story (2013–2017):** Standard remains the leading contributor across both units and revenue over the observed period, indicating stable demand and making it the best candidate for forecasting and product-led planning.
+- **Who uses this:** **Finance** (planning/forecasting), **Sales Ops** (product strategy & bundles), **Operations/Supply** (capacity and inventory planning).
 
-##### Insight 2 — Northeast wins total revenue; West/Midwest win on average order value
-- **Business metric(s):** total revenue (`SUM(total_amt_usd)`), **AOV proxy** (`AVG(total_amt_usd)`)
-- **Quantified value:**
-  - **Top region by total sales:** **Northeast = $7,744,405.36**
-  - **Company avg order value:** **$3,348.02**
-  - **Above-average regions:** **West = $3,626.15**, **Midwest = $3,359.52**
-- **Historical trend story:** The Northeast appears to win through **volume/frequency** (highest total), while West/Midwest skew higher on **basket size**, suggesting different playbooks (retention/reorder vs upsell).
-- **Who uses this:** **Regional Sales**, **RevOps**, **Finance** (targets and pacing).
+##### Insight 2 — Northeast leads total revenue; West/Midwest lead on average order value (AOV)
+- **Business metric(s):** Total revenue by region; **AOV proxy** = average order value (USD)  
+- **Qualified value:**  
+  - **Top region by total sales:** Northeast = **$7,744,405.36**  
+  - **Company AOV:** **$3,348.02**  
+  - **Above-average AOV regions:** West = **$3,626.15**, Midwest = **$3,359.52**
+- **Simple trend story:** Regional performance splits into **volume vs. basket size**—Northeast appears to win through higher frequency/volume, while West/Midwest skew higher on order value, implying different target-setting and pipeline strategies.
+- **Who uses this:** **Regional Sales leadership**, **Sales Ops** (coverage model & targets), **Finance** (pacing and goal-setting).
 
-##### Insight 3 — Direct dominates web activity, but attribution needs a defined model
-- **Business metric(s):** web events by `channel` (activity proxy)
-- **Quantified value:**
-  - **Top channel by event volume:** **Direct = 5,298 events**
-  - Account-level joins show Direct associated with the highest summed sales volume output.
-- **Historical trend story:** Direct traffic is consistently high across the period, which may reflect repeat customers rather than acquisition; attribution logic should be defined before reallocating marketing spend.
-- **Who uses this:** **Marketing Analyst** (channel measurement), **Finance** (ROI governance), **Sales Ops** (lead-source alignment).
+##### Insight 3 — High-value accounts stand out by average order value (AOV benchmark)
+- **Business metric(s):** Average order value (AOV proxy) by account = `AVG(total_amt_usd)`  
+- **Qualified value (Top 5 by AOV):**
+  - **Pacific Life:** **$19,639.94**
+  - **Fidelity National Financial:** **$13,753.41**
+  - **Kohl's:** **$12,872.17**
+  - **State Farm Insurance Cos.:** **$12,423.39**
+  - **AmerisourceBergen:** **$9,685.45**
+- **Simple trend story:** AOV highlights accounts with consistently larger baskets, helping differentiate **high-volume** customers from **high-value-per-order** customers for account planning.
+- **Who uses this:** **Account Managers / Sales**, **Sales Ops** (segmentation), **Finance** (revenue concentration and risk review).
 
-##### Insight 4 — Time-series views support pacing and seasonality checks
-- **Business metric(s):** monthly revenue + running total; daily orders + **7-day moving average**
-- **Quantified value (examples from outputs):**
-  - Monthly revenue varies meaningfully month-to-month (e.g., **Oct 2014 = $495,333.59** in the early sample).
-  - Smoothed daily demand (7-day MA) stabilizes around **~3–5 orders/day** in early records.
-- **Historical trend story:** Running totals enable executive pacing, while moving averages reduce noise and support early detection of demand shifts.
-- **Who uses this:** **Business Ops**, **Finance**, **Sales Leadership**.
+##### Insight 4 — Direct dominates web activity; attribution requires a defined model
+- **Business metric(s):** Web events by channel (engagement proxy) + account-level association to sales volume  
+- **Qualified value:**  
+  - **Top channel by activity:** Direct = **5,298 events**
+  - **Account-level joins:** Direct-linked accounts show the highest total quantity sold (directional signal).
+- **Simple trend story:** Direct traffic may reflect repeat customers rather than acquisition; without session/order-level linkage, channel conclusions should be treated as directional rather than causal.
+- **Who uses this:** **Marketing Analytics** (channel measurement), **Sales Ops** (lead-source alignment), **Finance** (ROI governance).
 
-#### Recommendations
-1) **Product strategy:** Protect Standard as the core revenue engine while partnering with **Sales Ops + Finance** to test cross-sell bundles and pricing thresholds.
-2) **Regional execution:** Align playbooks to regional dynamics—**Northeast** focus on reorder cadence/retention; **West/Midwest** prioritize upsell and expansion.
-3) **Marketing measurement:** Define channel attribution rules (e.g., time-window matching or last-touch by session) before making channel investment decisions.
-4) **Operational reporting:** Publish a recurring KPI pack (monthly revenue pacing + weekly demand trend) for Sales and Finance stakeholders.
+##### Insight 5 — Time-series views support pacing and seasonality checks
+- **Business metric(s):** Monthly revenue + running total; daily order count + **7-day moving average**  
+- **Qualified value (examples from outputs):**
+  - Monthly revenue varies meaningfully month-to-month (e.g., **Oct 2014 = $495,333.59** in the sample output).
+  - Early daily demand smooths to roughly **~3–5 orders/day** via 7-day moving average.
+- **Simple trend story:** Running totals support executive pacing, while moving averages reduce noise and help detect demand shifts earlier than raw daily counts.
+- **Who uses this:** **Business Operations**, **Sales Leadership**, **Finance** (forecasting and pacing).
+
+---
+
+#### 5) Recommendations (Next Steps)
+- **Product strategy:** Protect **Standard** as the primary revenue driver; partner with **Sales Ops + Finance** to test bundle offers and pricing thresholds for cross-sell into Gloss/Poster where appropriate.
+- **Regional execution:** Align playbooks to regional dynamics—**Northeast** focus on retention/reorder cadence; **West/Midwest** prioritize upsell/expansion motions to capitalize on higher AOV.
+- **Marketing measurement:** Implement an attribution approach (e.g., defined time window + touch rules) before reallocating spend based on channel-level signals.
+- **Operational reporting:** Publish a recurring KPI pack (monthly revenue pacing + weekly demand trend) for Sales and Finance stakeholders.
 
 ---
 
 #### Caveats & Assumptions
-- **Attribution caution:** Web events connect to orders through `account_id`. Without session/order-level attribution, channel-to-sales joins can inflate totals for high-activity accounts.
-- **Profitability definition:** “Most profitable” is based on **revenue**, not margin (no COGS/discount fields available).
-- **Time gaps:** Days with zero orders may not exist as rows; moving averages can be improved by generating a full calendar date spine.
-- **Data quality:** Outlier and null validation is not fully production-hardened; additional checks are recommended for operational use.
+- **Attribution caution:** Web events connect to orders through `account_id`. Without session/order-level keys, channel-to-sales joins can inflate results for high-activity accounts.
+- **Profitability definition:** “Most profitable” is interpreted as highest **revenue**, not margin (COGS/discount data not available).
+- **Time gaps:** Days with zero orders may not appear as rows; moving averages improve with a complete calendar date spine.
+- **Data quality:** Outlier/null validation is not production-hardened; additional QA checks are recommended before operational use.
