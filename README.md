@@ -4,7 +4,7 @@
 - SQL Answers (Q1–Q15): [docs/sql_answers.md](docs/sql_answers.md)
 - ERD (PDF): [docs/erd.pdf](docs/erd.pdf)
 - Data Dictionary (PDF): [docs/data_dictionary.pdf](docs/data_dictionary.pdf)
-- SQL Script: [sql/retail_analysis.sql](sql/retail_analysis.sql)
+- SQL Script: SQL Script: [sql/retail_queries.sql](sql/retail_queries.sql)
 
 ---
 
