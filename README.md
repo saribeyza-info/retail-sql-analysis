@@ -48,6 +48,18 @@ Full technical details and reproducible outputs are available in [SQL Answers](d
 ---
 
 #### 4) Insights Deep Dive
+<details>
+  <summary><b>Insights Deep Dive (click to expand)</b></summary>
+
+  <!-- **Business metric(s):** Product revenue (USD) and units sold by paper type  
+- **Qualified value:**  
+  - **Revenue:** Standard **$9,672,346.54** | Gloss **$7,593,159.77** | Poster **$5,876,005.52**  
+  - **Units:** Standard **1,938,346** | Gloss **1,013,773** | Poster **723,646**
+- **Simple trend story (2013–2017):** Standard remains the leading contributor across both units and revenue over the observed period, indicating stable demand and making it the best candidate for forecasting and product-led planning.
+- **Who uses this:** **Finance** (planning/forecasting), **Sales Ops** (product strategy & bundles), **Operations/Supply** (capacity and inventory planning). -->
+  
+</details>
+
 ##### Insight 1 — Standard is the core revenue engine (revenue + volume leader)
 - **Business metric(s):** Product revenue (USD) and units sold by paper type  
 - **Qualified value:**  
