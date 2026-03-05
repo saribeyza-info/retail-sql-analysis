@@ -1,8 +1,8 @@
-Retail SQL Analysis – Answers & SQL Code
-Queries only. Explanations and outputs: docs/sql_answers.md
+--Retail SQL Analysis – Answers & SQL Code
+--Queries only. Explanations and outputs: docs/sql_answers.md
 	
 
---Q1. How many rows are in each table?
+-- Q1. How many rows are in each table?
 SELECT  COUNT(*) FROM   accounts;
 SELECT  COUNT(*) FROM   orders;
 SELECT  COUNT(*) FROM   region;
@@ -10,14 +10,14 @@ SELECT  COUNT(*) FROM   sales_reps;
 SELECT  COUNT(*) FROM   web_events;
 
 
---Q2: What is the date range of orders?
+-- Q2: What is the date range of orders?
 SELECT
        MIN (occurred_at)  AS first_order, 
        MAX(occurred_at) AS last_order
 FROM orders;
 
       
---Q3: How many of each type of paper has been sold?
+-- Q3: How many of each type of paper has been sold?
 SELECT  
       SUM(standard_qty) AS sum_standard,
       SUM(gloss_qty) AS sum_gloss,
@@ -25,7 +25,7 @@ SELECT
  FROM  orders;
 
 
---Q4: How much, in dollars, have each of the paper types sold?
+--  Q4: How much, in dollars, have each of the paper types sold?
 SELECT  
       SUM(standard_amt_usd) AS standard_total_usd,
       SUM(gloss_amt_usd) AS gloss_total_usd,
@@ -33,12 +33,12 @@ SELECT
  FROM  orders;
 
 
---Q5: What is the most profitable paper type?
+-- Q5: What is the most profitable paper type?
 
 Standard paper is the most profitable option by total revenue, because it has the highest total USD sales.
 
 
---Q6: What are the top five accounts by average total amount?
+-- Q6: What are the top five accounts by average total amount?
 SELECT  a.name AS account_name,
        o.account_id,
        ROUND(AVG(o.total_amt_usd),2) AS avg_total
@@ -52,7 +52,7 @@ AVG(total_amt_usd) DESC
 LIMIT 5;
 
 
---Q7: What channel do most of the online sales come from?
+-- Q7: What channel do most of the online sales come from?
 SELECT channel,
        COUNT(*) AS count_events
 FROM web_events
@@ -63,7 +63,7 @@ COUNT(*) DESC
 LIMIT 1;
 
 
---Q8: Which region_id has the largest number of sales persons?
+-- Q8: Which region_id has the largest number of sales persons?
 SELECT region_id,
        COUNT(*) AS count_sales_reps
 FROM sales_reps 
@@ -74,7 +74,7 @@ count_sales_reps DESC
 LIMIT 1;
 
 
---Q9: Which web events channel had the highest total quantity sold of all three types of paper?
+-- Q9: Which web events channel had the highest total quantity sold of all three types of paper?
 SELECT w.channel,
        SUM(o.total) AS sum_total
 FROM web_events w
@@ -89,7 +89,7 @@ ORDER BY
 LIMIT 1;
 
 
---Q10: Which region, by  name, has the highest amount of sales in USD?
+-- Q10: Which region, by  name, has the highest amount of sales in USD?
 SELECT r.name,
       SUM(o.total_amt_usd) AS sum_total_usd
 FROM region r
@@ -106,7 +106,7 @@ sum_total_usd DESC
 LIMIT 1;
 
 
---Q11: Categorize each region’s average sales as “Above Average” or “Below Average” based on the average for the company as a whole.
+-- Q11: Categorize each region’s average sales as “Above Average” or “Below Average” based on the average for the company as a whole.
 WITH region_avg AS (
     SELECT
         r.name AS region_name,
@@ -141,7 +141,7 @@ ORDER BY
 ra.region_avg_usd DESC;
 
 
---Q12: What are the total quantities of each paper type sold for the top region?
+-- Q12: What are the total quantities of each paper type sold for the top region?
 WITH top_region AS (
     SELECT 
         r.id AS top_region_id,
@@ -176,7 +176,7 @@ GROUP BY
     tr.top_region_name;
 
 
---Q13: What are the average sales in USD by region and sales person? Include region name, sales person’s name, and account name. Include first 20 rows
+-- Q13: What are the average sales in USD by region and sales person? Include region name, sales person’s name, and account name. Include first 20 rows
 SELECT DISTINCT
     r.name AS region_name,
     sr.name AS sales_rep_name,
@@ -197,7 +197,7 @@ ORDER BY
 LIMIT 20;
 
 
---Q14: What is the running total of sales by month? Return the first twenty rows.
+-- Q14: What is the running total of sales by month? Return the first twenty rows.
 WITH monthly_total AS (
   SELECT
     TO_CHAR(DATE_TRUNC('month', occurred_at), 'YYYY-MM-01') AS month,
@@ -214,7 +214,7 @@ ORDER BY month
 LIMIT 20;
 
 
---Q15: Create a seven-day moving average of orders (hint: CTE, temp table, or subquery).
+-- Q15: Create a seven-day moving average of orders (hint: CTE, temp table, or subquery).
 WITH daily_orders AS (
   SELECT
     TO_CHAR(CAST(occurred_at AS date), 'YYYY-MM-DD') AS order_date,
