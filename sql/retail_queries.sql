@@ -1,33 +1,23 @@
-Beyza Sarı– Udacity Retail Analysis Project
-	
 Retail SQL Analysis – Answers & SQL Code
+Queries only. Explanations and outputs: docs/sql_answers.md
 	
-EDA (Q1–Q8)
 
-Q1. How many rows are in each table?
-
-I counted the rows in each table to understand the dataset size.
-
+--Q1. How many rows are in each table?
 SELECT  COUNT(*) FROM   accounts;
 SELECT  COUNT(*) FROM   orders;
 SELECT  COUNT(*) FROM   region;
 SELECT  COUNT(*) FROM   sales_reps;
 SELECT  COUNT(*) FROM   web_events;
 
-Q2: What is the date range of orders?
 
-I used MIN and MAX on the date column to find the order date range.
-
+--Q2: What is the date range of orders?
 SELECT
        MIN (occurred_at)  AS first_order, 
        MAX(occurred_at) AS last_order
 FROM orders;
 
       
-Q3: How many of each type of paper has been sold?
-
-I summed each paper type column to see total quantities sold.
-
+--Q3: How many of each type of paper has been sold?
 SELECT  
       SUM(standard_qty) AS sum_standard,
       SUM(gloss_qty) AS sum_gloss,
@@ -35,10 +25,7 @@ SELECT
  FROM  orders;
 
 
-Q4: How much, in dollars, have each of the paper types sold?
-
-I summed the USD amount for each paper type to find total revenue.
-
+--Q4: How much, in dollars, have each of the paper types sold?
 SELECT  
       SUM(standard_amt_usd) AS standard_total_usd,
       SUM(gloss_amt_usd) AS gloss_total_usd,
@@ -46,15 +33,12 @@ SELECT
  FROM  orders;
 
 
-Q5: What is the most profitable paper type?
+--Q5: What is the most profitable paper type?
 
 Standard paper is the most profitable option by total revenue, because it has the highest total USD sales.
 
 
-Q6: What are the top five accounts by average total amount?
-
-I grouped by account and used AVG to find top accounts by average sales, also used Round for easy reading.
-
+--Q6: What are the top five accounts by average total amount?
 SELECT  a.name AS account_name,
        o.account_id,
        ROUND(AVG(o.total_amt_usd),2) AS avg_total
@@ -68,10 +52,7 @@ AVG(total_amt_usd) DESC
 LIMIT 5;
 
 
-Q7: What channel do most of the online sales come from?
-
-I treated web_events table as online activity. I counted web events by grouping them in order to find highest activity. 
-
+--Q7: What channel do most of the online sales come from?
 SELECT channel,
        COUNT(*) AS count_events
 FROM web_events
@@ -82,11 +63,7 @@ COUNT(*) DESC
 LIMIT 1;
 
 
-Q8: Which region_id has the largest number of sales persons?
-
-By grouping the regions, I found out how many sales representatives were assigned to each region. So we can see how the team is spread out.
-I found the top region by sorting it from largest to smallest using order by.
-
+--Q8: Which region_id has the largest number of sales persons?
 SELECT region_id,
        COUNT(*) AS count_sales_reps
 FROM sales_reps 
@@ -97,12 +74,7 @@ count_sales_reps DESC
 LIMIT 1;
 
 
-Joins
-
-Q9: Which web events channel had the highest total quantity sold of all three types of paper?
-
-I joined web_events to orders through accounts to see which channel drives the most sales.
-
+--Q9: Which web events channel had the highest total quantity sold of all three types of paper?
 SELECT w.channel,
        SUM(o.total) AS sum_total
 FROM web_events w
@@ -117,12 +89,7 @@ ORDER BY
 LIMIT 1;
 
 
-Q10: Which region, by  name, has the highest amount of sales in USD?
-
-
-I joined  orders, sales_reps, accounts and region to calculate total sales for each region by name. .then used order by to sort descending.
-
-
+--Q10: Which region, by  name, has the highest amount of sales in USD?
 SELECT r.name,
       SUM(o.total_amt_usd) AS sum_total_usd
 FROM region r
@@ -139,17 +106,7 @@ sum_total_usd DESC
 LIMIT 1;
 
 
-CTEs, Sub queries, and temp tables
-
-Q11: Categorize each region’s average sales as “Above Average” or “Below Average” based on the average for the company as a whole.
-
-This solution uses two CTEs: 
-1: region_avg computes the average order value per region
-2: while overall_avg computes the company-wide average as a single value. 
-In the final SELECT, since overall_avg returns one row, we attach it to every region row using ON 1=1. 
-
-Then a CASE WHEN compares the region average to the company average and labels it Above Average if greater than or equal, otherwise Below Average.
-
+--Q11: Categorize each region’s average sales as “Above Average” or “Below Average” based on the average for the company as a whole.
 WITH region_avg AS (
     SELECT
         r.name AS region_name,
@@ -184,15 +141,7 @@ ORDER BY
 ra.region_avg_usd DESC;
 
 
-
-Q12: What are the total quantities of each paper type sold for the top region?
-
-I first use a top_region CTE to select the top-performing region as a single row.
-
-Then I link that region back to orders via sales_reps.region_id.
-
-Next calculate SUM(standard_qty), SUM(gloss_qty), and SUM(poster_qty) to get total quantities for each paper type in that top region.
-
+--Q12: What are the total quantities of each paper type sold for the top region?
 WITH top_region AS (
     SELECT 
         r.id AS top_region_id,
@@ -227,13 +176,7 @@ GROUP BY
     tr.top_region_name;
 
 
-Windowing Functions 
-
-Q13: What are the average sales in USD by region and sales person? Include region name, sales person’s name, and account name. Include first 20 rows
-
-I joined region, sales rep, and account data and calculated the average order value in USD per account.
-This lets me compare which accounts perform better on average within each region and sales rep.
-
+--Q13: What are the average sales in USD by region and sales person? Include region name, sales person’s name, and account name. Include first 20 rows
 SELECT DISTINCT
     r.name AS region_name,
     sr.name AS sales_rep_name,
@@ -254,13 +197,7 @@ ORDER BY
 LIMIT 20;
 
 
-Q14: What is the running total of sales by month? Return the first twenty rows.
-
-In this question, With using CTE, firstly I found total us sales by month. in order to do that I grouped months. 
-
-Secondly, with the window function I found running total.
-
-
+--Q14: What is the running total of sales by month? Return the first twenty rows.
 WITH monthly_total AS (
   SELECT
     TO_CHAR(DATE_TRUNC('month', occurred_at), 'YYYY-MM-01') AS month,
@@ -277,13 +214,7 @@ ORDER BY month
 LIMIT 20;
 
 
-Q15: Create a seven-day moving average of orders (hint: CTE, temp table, or subquery).
-
-I interpreted 'orders' as order count.
-First, I created a CTE to count orders per day using DATE_TRUNC and COUNT.
-Then, I used a window function to find moving average which is average each day with the previous 6 days.
-This smooths out daily fluctuations and helps identify order trends over time.
-
+--Q15: Create a seven-day moving average of orders (hint: CTE, temp table, or subquery).
 WITH daily_orders AS (
   SELECT
     TO_CHAR(CAST(occurred_at AS date), 'YYYY-MM-DD') AS order_date,
