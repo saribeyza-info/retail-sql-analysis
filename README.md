@@ -16,6 +16,9 @@ The solution demonstrates core analytics SQL techniques—**JOINs**, **aggregati
 ---
 
 #### 2) Data Structure Overview (Business View)
+
+![ERD](docs/Erd.png)
+
 **Database entities (scope)**
 | Table | Rows | What it represents |
 |---|---:|---|
